@@ -1,31 +1,46 @@
 import Home from "./reusables/Home";
-import Menu from "./features/menu/Menu";
+import Menu, { loader as menuLoader } from "./features/menu/Menu";
 import Cart from "./features/cart/Cart";
-import CreateOrder from "./features/order/CreateOrder";
-import Order from "./features/order/Order";
+import CreateOrder, {
+  action as CreateOrderAction,
+} from "./features/order/CreateOrder";
+import Order, { loader as orderLoader } from "./features/order/Order";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import AppLayout from "./reusables/AppLayout";
+import Error from "./reusables/Error";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-  },
+    element: <AppLayout />,
+    errorElement: <Error />,
 
-  {
-    path: "/menu",
-    element: <Menu />,
-  },
-  {
-    path: "/cart",
-    element: <Cart />,
-  },
-  {
-    path: "/order",
-    element: <Order />,
-  },
-  {
-    path: "/order/new",
-    element: <CreateOrder />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+        loader: menuLoader,
+        errorElement: <Error />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/order/:orderId",
+        element: <Order />,
+        loader: orderLoader,
+        errorElement: <Error />,
+      },
+      {
+        path: "/order/new",
+        element: <CreateOrder />,
+        action: CreateOrderAction,
+      },
+    ],
   },
 ]);
 export const App = () => {
